@@ -40,7 +40,7 @@
             margin: 20px;
         }
 
-        #gridSize {
+        #gridSize, #speedControl, #cellSizeControl {
             margin-top: 10px;
         }
 
@@ -57,8 +57,17 @@
     <button id="clearButton">Clear</button>
     <button id="pauseButton">Pause</button>
     <button id="resumeButton" disabled>Resume</button>
+    <button id="stepButton">Step</button>
+    
     <label for="gridSize">Grid Size:</label>
     <input type="range" id="gridSize" min="20" max="100" value="50">
+
+    <label for="cellSizeControl">Cell Size:</label>
+    <input type="range" id="cellSizeControl" min="5" max="20" value="10">
+
+    <label for="speedControl">Simulation Speed (ms):</label>
+    <input type="range" id="speedControl" min="50" max="1000" value="100">
+
     <label for="patternSelector">Select Pattern:</label>
     <select id="patternSelector">
         <option value="">None</option>
@@ -66,6 +75,25 @@
         <option value="blinker">Blinker</option>
         <option value="toad">Toad</option>
     </select>
+    
+    <label>
+        <input type="checkbox" id="randomizeCheckbox" checked>
+        Randomize Initial State
+    </label>
+
+    <div>
+        <label for="aliveColor">Alive Cell Color:</label>
+        <input type="color" id="aliveColor" value="#00FF00">
+    </div>
+    <div>
+        <label for="deadColor">Dead Cell Color:</label>
+        <input type="color" id="deadColor" value="#222222">
+    </div>
+
+    <label>
+        <input type="checkbox" id="gridLinesCheckbox" checked>
+        Show Grid Lines
+    </label>
 </div>
 
 <script>
@@ -73,7 +101,8 @@
     const ctx = canvas.getContext('2d');
     
     let gridSize = 50;
-    const cellSize = 10;
+    let cellSize = 10;
+    let simulationSpeed = 100; // Default speed
     canvas.width = gridSize * cellSize;
     canvas.height = gridSize * cellSize;
 
@@ -83,32 +112,32 @@
 
     function createGrid(size) {
         const newGrid = Array.from({ length: size }, () => Array(size).fill(0));
-        // Randomly fill the grid with alive cells (1s)
-        for (let row = 0; row < size; row++) {
-            for (let col = 0; col < size; col++) {
-                newGrid[row][col] = Math.random() < 0.3 ? 1 : 0; // 30% chance of being alive
+        // Randomly fill the grid with alive cells (1s) if the checkbox is checked
+        if (document.getElementById('randomizeCheckbox').checked) {
+            for (let row = 0; row < size; row++) {
+                for (let col = 0; col < size; col++) {
+                    newGrid[row][col] = Math.random() < 0.3 ? 1 : 0; // 30% chance of being alive
+                }
             }
         }
         return newGrid;
     }
 
-    function getColor(age) {
-        const maxAge = 10; // Maximum age for color scaling
-        const ratio = Math.min(age / maxAge, 1); // Scale age between 0 and 1
-        const r = Math.round(255 * ratio); // Red channel increases with age
-        const g = Math.round(255 * (1 - ratio)); // Green channel decreases with age
-        const b = 0; // Keep blue constant
-        return `rgb(${r}, ${g}, ${b})`;
+    function getColor(isAlive) {
+        return isAlive ? document.getElementById('aliveColor').value : document.getElementById('deadColor').value;
     }
 
     function drawGrid() {
         for (let row = 0; row < gridSize; row++) {
             for (let col = 0; col < gridSize; col++) {
-                const age = grid[row][col];
-                ctx.fillStyle = age ? getColor(age) : '#222'; // Use smoother colors based on age
+                const isAlive = grid[row][col] > 0;
+                ctx.fillStyle = getColor(isAlive);
                 ctx.fillRect(col * cellSize, row * cellSize, cellSize, cellSize);
-                ctx.strokeStyle = '#444';
-                ctx.strokeRect(col * cellSize, row * cellSize, cellSize, cellSize);
+                
+                if (document.getElementById('gridLinesCheckbox').checked) {
+                    ctx.strokeStyle = '#444';
+                    ctx.strokeRect(col * cellSize, row * cellSize, cellSize, cellSize);
+                }
             }
         }
     }
@@ -171,6 +200,10 @@
         document.getElementById('resumeButton').disabled = true;
     });
 
+    document.getElementById('stepButton').addEventListener('click', () => {
+        updateGrid();
+    });
+
     document.getElementById('gridSize').addEventListener('input', (e) => {
         gridSize = e.target.value;
         canvas.width = gridSize * cellSize;
@@ -178,6 +211,21 @@
         grid = createGrid(gridSize);
         drawGrid();
     });
+
+    document.getElementById('cellSizeControl').addEventListener('input', (e) => {
+        cellSize = e.target.value;
+        canvas.width = gridSize * cellSize;
+        canvas.height = gridSize * cellSize;
+        drawGrid();
+    });
+
+   document.getElementById('speedControl').addEventListener('input', (e) => {
+    simulationSpeed = 1000 - e.target.value; // Invert the speed
+    if (running) {
+        clearInterval(interval);
+        startSimulation();
+    }
+});
 
     document.getElementById('patternSelector').addEventListener('change', (e) => {
         const pattern = e.target.value;
@@ -214,7 +262,7 @@
     function startSimulation() {
         interval = setInterval(() => {
             if (running) updateGrid();
-        }, 100);
+        }, Math.max(50, simulationSpeed)); // Ensure a minimum interval
     }
 
     startSimulation(); // Automatically start the simulation
