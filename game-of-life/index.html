@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Conway's Game of Life</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #222;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        canvas {
+            border: 1px solid white;
+            cursor: pointer;
+        }
+
+        button {
+            padding: 10px;
+            margin: 5px;
+            font-size: 16px;
+            background-color: #444;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #555;
+        }
+
+        #controls {
+            margin: 20px;
+        }
+
+        #gridSize {
+            margin-top: 10px;
+        }
+
+        #patternSelector {
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Enhanced Conway's Game of Life</h1>
+<canvas id="gameCanvas"></canvas>
+<div id="controls">
+    <button id="clearButton">Clear</button>
+    <button id="pauseButton">Pause</button>
+    <button id="resumeButton" disabled>Resume</button>
+    <label for="gridSize">Grid Size:</label>
+    <input type="range" id="gridSize" min="20" max="100" value="50">
+    <label for="patternSelector">Select Pattern:</label>
+    <select id="patternSelector">
+        <option value="">None</option>
+        <option value="glider">Glider</option>
+        <option value="blinker">Blinker</option>
+        <option value="toad">Toad</option>
+    </select>
+</div>
+
+<script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    let gridSize = 50;
+    const cellSize = 10;
+    canvas.width = gridSize * cellSize;
+    canvas.height = gridSize * cellSize;
+
+    let grid = createGrid(gridSize);
+    let interval;
+    let running = true;
+
+    function createGrid(size) {
+        const newGrid = Array.from({ length: size }, () => Array(size).fill(0));
+        // Randomly fill the grid with alive cells (1s)
+        for (let row = 0; row < size; row++) {
+            for (let col = 0; col < size; col++) {
+                newGrid[row][col] = Math.random() < 0.3 ? 1 : 0; // 30% chance of being alive
+            }
+        }
+        return newGrid;
+    }
+
+    function getColor(age) {
+        const maxAge = 10; // Maximum age for color scaling
+        const ratio = Math.min(age / maxAge, 1); // Scale age between 0 and 1
+        const r = Math.round(255 * ratio); // Red channel increases with age
+        const g = Math.round(255 * (1 - ratio)); // Green channel decreases with age
+        const b = 0; // Keep blue constant
+        return `rgb(${r}, ${g}, ${b})`;
+    }
+
+    function drawGrid() {
+        for (let row = 0; row < gridSize; row++) {
+            for (let col = 0; col < gridSize; col++) {
+                const age = grid[row][col];
+                ctx.fillStyle = age ? getColor(age) : '#222'; // Use smoother colors based on age
+                ctx.fillRect(col * cellSize, row * cellSize, cellSize, cellSize);
+                ctx.strokeStyle = '#444';
+                ctx.strokeRect(col * cellSize, row * cellSize, cellSize, cellSize);
+            }
+        }
+    }
+
+    function updateGrid() {
+        const newGrid = createGrid(gridSize);
+        for (let row = 0; row < gridSize; row++) {
+            for (let col = 0; col < gridSize; col++) {
+                const neighbors = countNeighbors(row, col);
+                if (grid[row][col] > 0) {
+                    newGrid[row][col] = (neighbors === 2 || neighbors === 3) ? grid[row][col] + 1 : 0; // Increment age if alive
+                } else {
+                    newGrid[row][col] = (neighbors === 3) ? 1 : 0; // Birth
+                }
+            }
+        }
+        grid = newGrid;
+        drawGrid();
+    }
+
+    function countNeighbors(row, col) {
+        let count = 0;
+        for (let i = -1; i <= 1; i++) {
+            for (let j = -1; j <= 1; j++) {
+                if (i === 0 && j === 0) continue; // Skip the cell itself
+                const newRow = row + i;
+                const newCol = col + j;
+                if (newRow >= 0 && newRow < gridSize && newCol >= 0 && newCol < gridSize) {
+                    count += grid[newRow][newCol] > 0 ? 1 : 0; // Count only alive cells
+                }
+            }
+        }
+        return count;
+    }
+
+    canvas.addEventListener('click', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        const x = Math.floor((e.clientX - rect.left) / cellSize);
+        const y = Math.floor((e.clientY - rect.top) / cellSize);
+        grid[y][x] = grid[y][x] ? 0 : 1; // Toggle cell state
+        drawGrid();
+    });
+
+    document.getElementById('clearButton').addEventListener('click', () => {
+        grid = createGrid(gridSize);
+        drawGrid();
+    });
+
+    document.getElementById('pauseButton').addEventListener('click', () => {
+        running = false;
+        clearInterval(interval);
+        document.getElementById('pauseButton').disabled = true;
+        document.getElementById('resumeButton').disabled = false;
+    });
+
+    document.getElementById('resumeButton').addEventListener('click', () => {
+        running = true;
+        startSimulation();
+        document.getElementById('pauseButton').disabled = false;
+        document.getElementById('resumeButton').disabled = true;
+    });
+
+    document.getElementById('gridSize').addEventListener('input', (e) => {
+        gridSize = e.target.value;
+        canvas.width = gridSize * cellSize;
+        canvas.height = gridSize * cellSize;
+        grid = createGrid(gridSize);
+        drawGrid();
+    });
+
+    document.getElementById('patternSelector').addEventListener('change', (e) => {
+        const pattern = e.target.value;
+        loadPattern(pattern);
+    });
+
+    function loadPattern(pattern) {
+        clearGrid();
+        if (pattern === 'glider') {
+            grid[1][2] = 1;
+            grid[2][3] = 1;
+            grid[3][1] = 1;
+            grid[3][2] = 1;
+            grid[3][3] = 1;
+        } else if (pattern === 'blinker') {
+            grid[2][1] = 1;
+            grid[2][2] = 1;
+            grid[2][3] = 1;
+        } else if (pattern === 'toad') {
+            grid[2][1] = 1;
+            grid[2][2] = 1;
+            grid[2][3] = 1;
+            grid[3][2] = 1;
+            grid[3][3] = 1;
+            grid[3][4] = 1;
+        }
+        drawGrid();
+    }
+
+    function clearGrid() {
+        grid = createGrid(gridSize);
+    }
+
+    function startSimulation() {
+        interval = setInterval(() => {
+            if (running) updateGrid();
+        }, 100);
+    }
+
+    startSimulation(); // Automatically start the simulation
+    drawGrid(); // Initial draw
+</script>
+
+</body>
+</html>
