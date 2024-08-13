@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rock Paper Scissors Bot</title>
+    <style>
+        body { text-align: center; margin-top: 50px; }
+        button { font-size: 20px; margin: 10px; padding: 10px 20px; }
+        #result { margin-top: 20px; font-size: 24px; }
+        #winPercentage { margin-top: 20px; font-size: 20px; }
+        #win { color: green; }
+    </style>
+</head>
+  
+<body>
+    <h1>Rock Paper Scissors</h1>
+    <button id="rock">🪨</button>
+    <button id="paper">📄</button>
+    <button id="scissors">✂️</button>
+    <div id="result"></div>
+    <div id="winPercentage">Win Percentage: 0%</div> <!-- Added win percentage display -->
+
+    <script>
+        const playerMoves = [];
+        let moveSequences = {};  // Stores sequences of moves and their frequencies
+        let botWins = 0;
+        let totalGames = 0; // Track total games played
+
+        document.getElementById('rock').addEventListener('click', () => playGame('rock'));
+        document.getElementById('paper').addEventListener('click', () => playGame('paper'));
+        document.getElementById('scissors').addEventListener('click', () => playGame('scissors'));
+
+        function playGame(playerChoice) {
+            console.log(`Player chose: ${playerChoice}`);
+
+            const botChoice = getBotChoice();
+            console.log(`Bot chose: ${botChoice}`);
+
+            playerMoves.push(playerChoice);
+            totalGames++; // Increment total games
+
+            // Update move sequences
+            updateMoveSequences(playerMoves);
+
+            const result = determineWinner(playerChoice, botChoice);
+
+            displayResult(result, botChoice);
+            updateWinPercentage(); // Update win percentage display
+
+            if (result === 'bot') {
+                botWins++;
+                document.body.style.backgroundColor = 'green';
+            } else {
+                document.body.style.backgroundColor = 'white';
+            }
+        }
+
+        function getBotChoice() {
+            if (playerMoves.length < 4) {
+                console.log('Bot is choosing randomly since there is not enough data.');
+                return ['rock', 'paper', 'scissors'][Math.floor(Math.random() * 3)];
+            } else {
+                console.log('Bot is analyzing the player\'s patterns.');
+                return predictPlayerMove();
+            }
+        }
+
+        function predictPlayerMove() {
+            const lastThreeMoves = playerMoves.slice(-3).join(',');
+            console.log(`Bot is analyzing the sequence: ${lastThreeMoves}`);
+
+            if (moveSequences[lastThreeMoves]) {
+                const nextMove = getMostFrequentNextMove(lastThreeMoves);
+                console.log(`Bot predicts the player will choose: ${nextMove}`);
+                return counterMove(nextMove);
+            } else {
+                console.log('Bot has not seen this sequence before, choosing randomly.');
+                return ['rock', 'paper', 'scissors'][Math.floor(Math.random() * 3)];
+            }
+        }
+
+        function updateMoveSequences(moves) {
+            if (moves.length < 4) return;
+
+            const lastThreeMoves = moves.slice(-4, -1).join(',');
+            const nextMove = moves[moves.length - 1];
+
+            if (!moveSequences[lastThreeMoves]) {
+                moveSequences[lastThreeMoves] = { rock: 0, paper: 0, scissors: 0 };
+            }
+
+            moveSequences[lastThreeMoves][nextMove]++;
+            console.log(`Updated sequence frequencies for ${lastThreeMoves}:`, moveSequences[lastThreeMoves]);
+        }
+
+        function getMostFrequentNextMove(sequence) {
+            const moveCounts = moveSequences[sequence];
+            return Object.keys(moveCounts).reduce((a, b) => moveCounts[a] > moveCounts[b] ? a : b);
+        }
+
+        function counterMove(move) {
+            const counter = { rock: 'paper', paper: 'scissors', scissors: 'rock' };
+            console.log(`Bot counters with: ${counter[move]}`);
+            return counter[move];
+        }
+
+        function determineWinner(player, bot) {
+            if (player === bot) return 'draw';
+            if ((player === 'rock' && bot === 'scissors') ||
+                (player === 'paper' && bot === 'rock') ||
+                (player === 'scissors' && bot === 'paper')) {
+                return 'player';
+            }
+            return 'bot';
+        }
+
+        function displayResult(result, botChoice) {
+            const resultDiv = document.getElementById('result');
+            if (result === 'draw') {
+                resultDiv.textContent = `It's a draw! Bot chose ${botChoice}`;
+            } else if (result === 'player') {
+                resultDiv.textContent = `You win! Bot chose ${botChoice}`;
+            } else {
+                resultDiv.textContent = `Bot wins! Bot chose ${botChoice}`;
+            }
+        }
+
+        function updateWinPercentage() {
+            const winPercentage = (botWins / totalGames) * 100; // Calculate win percentage
+            document.getElementById('winPercentage').textContent = `Win Percentage: ${winPercentage.toFixed(2)}%`; // Update display
+        }
+    </script>
+</body>
+</html>
