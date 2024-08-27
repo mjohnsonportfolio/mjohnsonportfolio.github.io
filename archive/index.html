@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Archive</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Helvetica Neue', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #282c34;
+            color: #61dafb;
+        }
+
+        .container {
+            text-align: center;
+            padding: 20px;
+            background: #20232a;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
+        }
+
+        h1 {
+            font-size: 4rem;
+            margin-bottom: 40px;
+            color: white;
+            text-transform: lowercase;
+            letter-spacing: 2px;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .buttons {
+
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 15px 40px;
+            font-size: 1.5rem;
+            color: #282c34;
+            background-color: #ff6f61;
+            text-decoration: none;
+            border-radius: 50px;
+            transition: background-color 0.3s, transform 0.3s;
+            text-align: center;
+        }
+
+        .btn:hover {
+            background-color: #b84e44;
+            transform: translateY(-5px);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+            background-color: #1a90d0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Web Design Projects</h1>
+        <div class="buttons">
+            <a href="embold/" class="btn">Embold Site Prototype</a>
+            <a href="fluidsim/" class="btn">Fluid Simulator</a>
+            <a href="game-of-life/" class="btn">Conway's Game Of Life</a>
+            <a href="nameparser/" class="btn">Embold Name Parser</a>
+            <a href="rps/" class="btn">Rock Paper Scissors</a>
+            <a href="tech-demo/" class="btn">Tech Demo</a>
+            <a href="prototype/" class="btn">Testing Page</a>
+        </div>
+    </div>
+</body>
+</html>
