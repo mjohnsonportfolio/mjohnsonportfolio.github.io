@@ -45,16 +45,21 @@
             padding: 15px 40px;
             font-size: 1.5rem;
             color: #282c34;
-            background-color: #ff6f61;
+            background: #ff6f61;
             text-decoration: none;
             border-radius: 50px;
             transition: background-color 0.3s, transform 0.3s;
-            text-align: center;
+            -webkit-transition: background-color 1s ease-out;
+  -moz-transition: background-color 1s ease-out;
+  -o-transition: background-color 1s ease-out;
+  transition: background-color 1s ease-out;
         }
 
         .btn:hover {
-            background-color: #b84e44;
+              background-color: #00909e;
+  cursor: pointer;
             transform: translateY(-5px);
+            
         }
 
         .btn:active {
