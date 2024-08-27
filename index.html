@@ -178,7 +178,6 @@
       transition: background-color 0.3s, color 0.3s;
     }
 
-    /* Navigation Menu */
     .navbar {
       position: fixed;
       top: 0;
@@ -224,13 +223,11 @@
       color: #00909e;
     }
 
-    /* Projects Section */
     .projects {
       padding: 100px 10%;
       background-color: white;
     }
 
-    /* Projects Section */
     .dark-mode .projects {
       padding: 100px 10%;
       background-color: #373737;
@@ -355,7 +352,6 @@
       }
     }
 
-    /* Skills Section */
     .skills {
       padding: 100px 10%;
       background-color: #f4f4f4;
@@ -421,7 +417,6 @@
       width: 80%;
     }
 
-    /* Interactive Timeline */
     .timeline {
       padding: 100px 10%;
       background-color: white;
@@ -496,7 +491,6 @@
       margin-top: 0;
     }
 
-    /* Contact Section */
     .contact {
       padding: 100px 10%;
       background-color: #f4f4f4;
@@ -571,7 +565,6 @@
       background-color: #00909e;
     }
 
-    /* Back-to-Top Button */
     .back-to-top {
       display: none;
       position: fixed;
@@ -604,7 +597,6 @@
       opacity: 0.8;
     }
 
-    /* Footer */
     footer {
       padding: 20px 10%;
       background-color: #222;
@@ -641,9 +633,7 @@
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       transition: transform 0.3s ease, box-shadow 0.3s ease;
       flex: 1 1 auto;
-      /* Allows items to grow and shrink */
       min-width: 100px;
-      /* Ensures a minimum width */
     }
 
     .skill-item:hover {
@@ -651,7 +641,6 @@
       box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
     }
 
-    /* General Section Styling */
     .about-section {
       background-color: #f9f9f9;
       padding: 60px 0;
@@ -662,7 +651,6 @@
       padding: 60px 0;
     }
 
-    /* Layout and Alignment */
     .about-content {
       display: flex;
       align-items: center;
@@ -671,21 +659,17 @@
       margin: 0 auto;
     }
 
-    /* Image Styling */
     .about-image img {
       width: 300px;
-      border-radius: 50%;
+      border-radius: 5%;
       box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
       transition: transform 0.3s ease;
-      /* Smooth transition for hover effect */
     }
 
-    /* Text Styling */
     .about-text {
       max-width: 600px;
-      margin-left: 40px;
+      margin-left: 500px;
       opacity: 0;
-      /* Start hidden for fade-in effect */
       transform: translateY(20px);
       transition: opacity 0.6s ease, transform 0.6s ease;
     }
@@ -707,13 +691,10 @@
       color: #555;
     }
 
-    /* Hover Effects */
     .about-image img:hover {
       transform: scale(1.05);
-      /* Slightly enlarge image on hover */
     }
 
-    /* Responsive Design */
     @media (max-width: 768px) {
       .about-content {
         flex-direction: column;
@@ -730,7 +711,6 @@
       }
     }
 
-    /* Class to Trigger Fade-In Effect */
     .about-section.in-view .about-text {
       opacity: 1;
       transform: translateY(0);
@@ -739,10 +719,8 @@
 </head>
 
 <body>
-  <!-- Dark Mode Toggle -->
   <div class="dark-mode-toggle" id="dark-mode-toggle"></div>
 
-  <!-- Navbar -->
   <div class="navbar">
     <ul>
       <li><a href="#hero"><b>Home</a></li>
@@ -752,17 +730,17 @@
       <li><a href="#contact">Contact</b></a></li>
     </ul>
   </div>
-  <!-- Hero Section -->
+
   <section class="hero" id="hero">
     <h1 class="hero-title">Welcome to My Portfolio!</h1>
     <p class="hero-subtitle typing-effect">I'm Mateo! An aspiring MIT grad passionate about engineering and programming.</p>
   </section>
-  <!-- About Me Section -->
+
   <section id="about-me" class="about-section">
     <div class="container">
       <div class="about-content">
         <div class="about-image">
-          <img src="hostedimages/mateo.jpg" alt="Mateo Johnson">
+          <img src="https://mjohnsonportfolio.github.io/hostedimages/mateo.jpg" alt="Mateo Johnson">
         </div>
         <div class="about-text">
           <h2>About Me</h2>
@@ -773,7 +751,6 @@
     </div>
   </section>
 
-  <!-- Projects Section -->
   <section class="projects" id="projects">
     <h2>My Projects</h2>
 
@@ -813,7 +790,6 @@
     </div>
   </section>
 
-  <!-- Skills Section -->
   <section class="skills" id="skills">
     <h2>Programming Skills</h2>
     <ul class="skills-list">
@@ -833,7 +809,6 @@
     </ul>
   </section>
 
-  <!-- Timeline Section -->
   <section class="timeline" id="timeline">
     <h2>My Journey</h2>
 
@@ -850,7 +825,6 @@
     </div>
   </section>
 
-  <!-- Contact Section -->
   <section class="contact" id="contact">
     <h2>Contact Me</h2>
     <form class="contact-form">
@@ -867,10 +841,8 @@
     </form>
   </section>
 
-  <!-- Back-to-Top Button -->
   <div class="back-to-top" id="back-to-top">&#8679;</div>
 
-  <!-- Footer -->
   <footer>
     <p>&copy; Mateo Johnson 2024. All Rights Reserved. |
       <a href="#">LinkedIn</a> |
@@ -880,13 +852,11 @@
   </footer>
 
   <script>
-    // Dark Mode Toggle
     const darkModeToggle = document.getElementById('dark-mode-toggle');
     darkModeToggle.addEventListener('click', () => {
       document.body.classList.toggle('dark-mode');
       darkModeToggle.classList.toggle('active');
     });
-    // Scroll Animation for Sections
     document.addEventListener('DOMContentLoaded', () => {
       const elements = document.querySelectorAll('.project-item, .skills h2, .contact h2, .skills .skill-bar, .timeline-item');
       const options = {
@@ -903,7 +873,6 @@
       elements.forEach(element => {
         observer.observe(element);
       });
-      // Skill Bars Animation
       const skillBars = document.querySelectorAll('.bar-fill');
       skillBars.forEach(bar => {
         bar.style.width = bar.classList.contains('html') ? '90%' :
@@ -911,7 +880,6 @@
           bar.classList.contains('javascript') ? '80%' : '0';
       });
     });
-    // Back-to-Top Button
     const backToTop = document.getElementById('back-to-top');
     window.addEventListener('scroll', () => {
       if (window.scrollY > 300) {
@@ -926,7 +894,6 @@
         behavior: 'smooth'
       });
     });
-    // Project Filtering
     function filterProjects(category) {
       const projects = document.querySelectorAll('.project-item');
       projects.forEach(project => {
@@ -1007,7 +974,6 @@
         fx.setText('Welcome to My Portfolio!');
       });
     });
-    // Function to check if element is in the viewport
     function isInViewport(element) {
       const rect = element.getBoundingClientRect();
       return (
@@ -1024,7 +990,6 @@
         aboutSection.classList.add('in-view');
       }
     }
-    // Listen for scroll events
     window.addEventListener('scroll', handleScroll);
 
     document.addEventListener('DOMContentLoaded', handleScroll);
