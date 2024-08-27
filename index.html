@@ -33,7 +33,20 @@
 
     .hero {
       height: 100vh;
-      background: linear-gradient(135deg, #0f2027, #2c5364);
+      background: linear-gradient(135deg, #0f2027, #ff6f61);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      color: white;
+      position: relative;
+      overflow: hidden;
+      transition: background-color 0.8s;
+    }
+      .dark-mode .hero {
+      height: 100vh;
+      background: linear-gradient(135deg, #0e1d24, #2c5364);
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -742,14 +755,14 @@
   <!-- Hero Section -->
   <section class="hero" id="hero">
     <h1 class="hero-title">Welcome to My Portfolio!</h1>
-    <p class="hero-subtitle typing-effect">I'm Mateo! An aspiring engineer passionate about technology and programming.</p>
+    <p class="hero-subtitle typing-effect">I'm Mateo! An aspiring MIT grad passionate about engineering and programming.</p>
   </section>
   <!-- About Me Section -->
   <section id="about-me" class="about-section">
     <div class="container">
       <div class="about-content">
         <div class="about-image">
-          <img src="your-photo.jpg" alt="Mateo Johnson">
+          <img src="hostedimages/mateo.jpg" alt="Mateo Johnson">
         </div>
         <div class="about-text">
           <h2>About Me</h2>
@@ -781,7 +794,7 @@
         <h3 class="project-title">coming soon</h3>
         <p class="project-description">details about the robotics project to come</p>
         <div class="project-links">
-          <a href="#">View Project</a> | <a href="#">Source Code</a>
+          <a href="fluidsim/">View Project</a> | <a href="#">Source Code</a>
         </div>
       </div>
     </div>
@@ -1004,7 +1017,7 @@
         rect.right <= (window.innerWidth || document.documentElement.clientWidth)
       );
     }
-    // Function to add the 'in-view' class when the section is in the viewport
+
     function handleScroll() {
       const aboutSection = document.getElementById('about-me');
       if (isInViewport(aboutSection)) {
@@ -1013,7 +1026,7 @@
     }
     // Listen for scroll events
     window.addEventListener('scroll', handleScroll);
-    // Initial check in case the section is already in view when the page loads
+
     document.addEventListener('DOMContentLoaded', handleScroll);
   </script>
 </body>
